@@ -6,6 +6,7 @@
 <meta property="og:image" content="https://gross1234.github.io/smartcookiesabc/icon.png"><meta name="theme-color" content="#EAF5F1">
 <link rel="icon" href="icon.png"><link rel="apple-touch-icon" href="icon.png">
 <style>:root{padding-top:env(safe-area-inset-top,0px)}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
+<script src="voice/manifest.js"></script>
 </head><body>
 <title>Smart Cookies ABC</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -444,6 +445,7 @@ try{pickVoice();speechSynthesis.onvoiceschanged=pickVoice}catch(e){}
 let ac=null;
 const CLIPS=window.ABC_VOICE||null;
 const player=typeof Audio!=='undefined'?new Audio():null;
+if(player){player.preload='auto';player.setAttribute('playsinline','')}
 let sayTok=0,spriteSrc=null;
 /* Web version: the same Kokoro clips packed into web-voice/voice-<n>.mp3; map[key]=[file,start,dur]. */
 const SPRITE={map:null,bufs:[]};
