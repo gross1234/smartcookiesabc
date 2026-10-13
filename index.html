@@ -454,6 +454,16 @@ if(!CLIPS&&window.fetch){
       .then(b=>new Promise((ok,no)=>{const c=audioCtx();if(!c)return no();const pr=c.decodeAudioData(b,ok,no);if(pr&&pr.then)pr.then(ok,no)}))
       .then(buf=>{SPRITE.bufs[f]=buf}).catch(()=>{})}).catch(()=>{});
 }
+// iPhone Safari mutes Web Audio while the ringer switch is on silent unless the page says it plays real audio,
+// and keeps a page's audio locked until a tap starts something. Fix both on the first touch.
+try{if(navigator.audioSession)navigator.audioSession.type='playback'}catch(e){}
+let unlocked=false;
+function unlockAudio(){
+  const c=audioCtx();if(!c||unlocked)return;
+  try{const b=c.createBuffer(1,1,22050),src=c.createBufferSource();src.buffer=b;src.connect(c.destination);src.start(0)}catch(e){}
+  if(c.state==='running')unlocked=true;
+}
+['pointerdown','touchend','click','keydown'].forEach(ev=>addEventListener(ev,unlockAudio,{capture:true,passive:true}));
 function hush(){sayTok++;try{spriteSrc&&spriteSrc.stop()}catch(e){}spriteSrc=null;try{player&&player.pause()}catch(e){}try{speechSynthesis.cancel()}catch(e){}}
 function say(parts,onend){
   hush();const tok=sayTok;parts=[].concat(parts);
